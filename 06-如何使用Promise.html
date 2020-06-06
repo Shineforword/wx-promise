@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>如何使用:语法搞清楚</title>
+  </head>
+  <script>
+    /*
+      1.Promise的构造函数:Promise(excutor){}
+      (1)excutor函数: 执行器 (resolve, reject)=>{}
+      (2)resolve函数:内部定义成功时,我们调用的函数 value=>{}
+      (3)reject函数:内部定义失败时,我们调用的函数 reason=>{}
+      说明excutor会在Promise内部立即同步回调,异步操作在执行器中执行
+    
+      2.Promise.prototype.then方法:(onResolved,onRejected)=>{}
+      (1)onResolved函数:成功回调函数 (value)=>{}
+      (2)onRejected函数:失败的回调函数 (reason)=>{}
+      说明:指定用于得到成功value的成功回调和用于得到失败reason的失败回调,返回一个新的Promise对象
+
+      3.Promise.prototype.catch方法:(onRejected)=>{}
+       onRejected函数:失败的回调函数(reason)=>{}
+       说明:then()的语法糖,相当于then(undefined,onRejected)
+      
+      4.Promise.resolve方法:(value)=>{}
+        value成功的数据或者是promise对象
+        说明:返回一个成功或失败的Promise对象
+
+      5.Promise.reject方法:(reason)=>{}
+      reason:失败的原因
+      说明:返回一个失败的Promise对象
+
+      6.Promise.all方法:(promises)=>{}
+      promises:包含n个promise的数组
+      说明:返回一个新的promise,只有所有的promise都成功才成功,只要有一个失败了就直接失败
+
+      7.Promise.race方法:(promise)=>{}
+      promise:包含n个promise的数组
+      说明:返回一个新的promise,第一个完成的promise的结果状态就是最终的结果状态
+    */
+
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // 执行器函数中成功或者失败只能改变一次,所以只能有一个执行
+        reject('失败的数据');
+        resolve('成功的数据');
+      }, 2000);
+    })
+      .then((value) => {
+        console.log('onResolved()1', value);
+      })
+      .catch((reason) => {
+        console.log('onReject()1', reason);
+      });
+    // 产生一个成功值为1的promise对象
+    const p1 = new Promise((resolve, reject) => {
+      resolve(1);
+    });
+    //等价语法糖
+    const p2 = Promise.resolve(1);
+    // 失败
+    const p3 = Promise.reject(3);
+    //
+    p1.then((value) => {
+      console.log(value);
+    });
+    p2.then((value) => {
+      console.log(value);
+    });
+    p3.catch((reason) => {
+      console.log(reason);
+    });
+
+    // promise.all  数组一个失败即失败
+    const pAll1 = Promise.all([p1, p2, p3]);
+    pAll1.then(
+      (value) => {},
+      (reason) => {
+        console.log('失败原因' + reason);
+      }
+    );
+    const pAll2 = Promise.all([p1, p2]);
+    pAll2.then(
+      (values) => {
+        console.log('成功' + values);
+      },
+      (reason) => {
+        console.log('失败原因' + reason);
+      }
+    );
+    //promise.race (首个完成)成功即成功,(首个完成)失败即失败  看谁先返回
+  </script>
+  <body></body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>准备</title>
+  </head>
+  <script>
+    /*
+    两种回调函数
+  1.同步回调
+    立即执行,完全执行了才结束,不会放入回调队列中
+    例子:数组遍历相关的回调函数,/Promise的excutor函数
+  2.异步回调
+    不会立即执行,会放入回调队列中将来执行
+    例子:定时器回调 /ajax回调/ Promise成功失败的回调
+  */
+
+    // 1同步
+    const arr = [1, 3, 5];
+    // 遍历的回调函数
+    arr.forEach((item) => {
+      console.log(item);
+    });
+    console.log('同步回调函数:forEach执行完毕');
+
+    // 2.异步
+    setTimeout(() => {
+      console.log('setTimeout中的');
+    }, 3000);
+    console.log('setTimeout之后的');
+  </script>
+  <body></body>
+</html>

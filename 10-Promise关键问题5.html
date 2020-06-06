@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>问题5</title>
+  </head>
+  <script>
+    /*
+    6.promise异常穿透?
+      (1)当使用promise的then的链式调用时,可以在最后指定失败的回调
+      (2)前面任何操作出了异常,都会传到最后失败的回调中处理
+    7.中断promise链
+      (1)当使用promise的then链式调用时,在中间中断,不再调用后面的回调函数
+      (2)办法:在回调函数中返回一个pedding状态的promise对象.  
+    */
+
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log('执行(异步任务)1');
+        resolve(1);
+      }, 1000);
+    })
+      .then(
+        (value) => {
+          console.log('任务1的结果:', value);
+          console.log('执行(同步任务)2');
+          // resolve(2);
+        },
+        (reason) => {
+          console.log('onRejected()1', reason);
+        }
+      )
+      .then(
+        (value) => {
+          console.log('任务2的结果:', value);
+          // 启动任务3(异步)
+          setTimeout(() => {
+            console.log('执行(异步任务)3');
+            // resolve(3);
+          }, 1000);
+        },
+        (reason) => {
+          console.log('', reason);
+        }
+      );
+  </script>
+  <body></body>
+</html>
